@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class problem3 {
     public static void main(String[] args) {
         int[] arrayOne = {1, 2, 3, 4, 5};
@@ -12,8 +14,6 @@ public class problem3 {
             }
         }
         arrayDoubled[arrayDoubled.length - 1] = arrayOne[lastIndex];
-        for (int num : arrayDoubled) {
-            System.out.println(num);
-        }
+        System.out.println(Arrays.toString(arrayDoubled));
     }
 }

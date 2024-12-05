@@ -1,4 +1,5 @@
 import java.util.*;
+
 public class Main {
     public static boolean isValidDNA(String str) {
         String validChars = "ACTG";
@@ -9,6 +10,7 @@ public class Main {
         }
         return true;
     }
+
     public static int matchGenes(String dnaString, String[] genes) {
         int lastIndex = 0;
         int gapSum = 0;
@@ -22,48 +24,43 @@ public class Main {
         return gapSum;
     }
 
-    // Reddit said allowed on AP Exam, maybe. Idk Mr. Schmidt this seems required to me
-    private static HashMap<Character, Integer> encodeMap = new HashMap<>();
+    private static final HashMap<Character, String> encodeMap = new HashMap<>();
     static {
-        encodeMap.put('A', 0b00);
-        encodeMap.put('C', 0b01);
-        encodeMap.put('G', 0b10);
-        encodeMap.put('T', 0b11);
-    }
-    private static HashMap<Integer, Character> decodeMap = new HashMap<>();
-    static {
-        decodeMap.put(0b00, 'A');
-        decodeMap.put(0b01, 'C');
-        decodeMap.put(0b10, 'G');
-        decodeMap.put(0b11, 'T');
+        encodeMap.put('A', "00");
+        encodeMap.put('C', "01");
+        encodeMap.put('G', "10");
+        encodeMap.put('T', "11");
     }
 
-    public static int encode(String dnaSegment) {
-        int encodedValue = 0;
+    private static final HashMap<String, Character> decodeMap = new HashMap<>();
+    static {
+        decodeMap.put("00", 'A');
+        decodeMap.put("01", 'C');
+        decodeMap.put("10", 'G');
+        decodeMap.put("11", 'T');
+    }
+
+    public static String encode(String dnaSegment) {
+        StringBuilder encodedString = new StringBuilder();
         for (char c : dnaSegment.toCharArray()) {
-            encodedValue <<= 2;
-            encodedValue |= encodeMap.get(c);
+            encodedString.append(encodeMap.get(c));
         }
-        return encodedValue;
+        return encodedString.toString();
     }
-    public static String decode(int encodedValue, int length) {
-        String decodedString = "";
-        for (int i = 0; i < length; i++) {
-            int lastTwoBits = encodedValue & 0b11;
-            decodedString = decodeMap.get(lastTwoBits) + decodedString;
-            encodedValue >>= 2;
+
+    public static String decode(String encodedValue, int length) {
+        StringBuilder decodedString = new StringBuilder();
+        for (int i = 0; i < encodedValue.length(); i += 2) {
+            String binaryChunk = encodedValue.substring(i, i + 2);
+            decodedString.append(decodeMap.get(binaryChunk));
         }
-        return decodedString;
+        return decodedString.toString();
     }
+
     public static void main(String[] args) {
         System.out.println(isValidDNA("ACTG"));
-        /*
-        Mr. Schmidt I really cannot figure out how to fix getting 45420 instead of 36204 when encoding
-        and decoding. I feel like I'm doing something right at least because the print values are almost the
-        exact same but I don't know how to fix it.
-         */
-        System.out.println(encode("GTACCGTA"));
-        System.out.println(decode(36204, 8));
-        System.out.println(decode(45420, 8));
+        String encodedDNA = encode("GTACCGTA");
+        System.out.println(encodedDNA);
+        System.out.println(decode(encodedDNA, 8));
     }
 }
